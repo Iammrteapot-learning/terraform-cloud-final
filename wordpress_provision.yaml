@@ -1,0 +1,21 @@
+provisioner:
+  type: shell
+  script: |
+    #!/bin/bash
+
+    sudo apt update && sudo apt upgrade
+    sudo apt install apache2
+    sudo systemctl enable apache2
+
+    sudo apt install -y php php-{common,mysql,xml,xmlrpc,curl,gd,imagick,cli,dev,imap,mbstring,opcache,soap,zip,intl}
+    cd /tmp && wget https://wordpress.org/latest.tar.gz
+    tar -xvf latest.tar.gz
+
+    chown -R www-data:www-data /var/www/html/wordpress/
+    chmod -R 755 /var/www/html/wordpress/
+
+    cd /var/www/html/wordpress
+    cp wp-config-sample.php wp-config.php
+    chown www-data:www-data wp-config.php
+
+    

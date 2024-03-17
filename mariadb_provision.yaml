@@ -1,0 +1,26 @@
+provisioner:
+  type: shell
+  script: |
+    #!/bin/bash
+    
+    sudo apt update && sudo apt upgrade -y
+    sudo systemctl reboot
+
+    sudo apt install software-properties-common -y
+
+    curl -LsS -O https://downloads.mariadb.com/MariaDB/mariadb_repo_setup
+    sudo bash mariadb_repo_setup --os-type=ubuntu  --os-version=focal --mariadb-server-version=10.6
+
+    wget http://ftp.us.debian.org/debian/pool/main/r/readline5/libreadline5_5.2+dfsg-3+b13_amd64.deb
+    sudo dpkg -i libreadline5_5.2+dfsg-3+b13_amd64.deb
+
+    sudo apt update
+    sudo apt install mariadb-server mariadb-client -y
+
+    sudo systemctl start mariadb
+    sudo systemctl enable mariadb
+    sudo mysql -u root -p root
+    CREATE DATABASE ${var.database_name};
+    CREATE USER '${var.database_user}'@'*' IDENTIFIED BY '${var.database_password}';
+    GRANT ALL PRIVILEGES ON ${var.database_name}.* TO '${var.database_user}'@’*’;
+    FLUSH PRIVILEGES;

@@ -54,11 +54,6 @@ resource "aws_route_table" "wordpress_public_route_table" {
   vpc_id = aws_vpc.terraform_vpc.id
 
   route {
-    cidr_block = aws_vpc.terraform_vpc.cidr_block
-    gateway_id = "local"
-  }
-
-  route {
     cidr_block = "0.0.0.0/0"
     gateway_id = aws_internet_gateway.terraform_igw.id
   }
@@ -87,11 +82,6 @@ resource "aws_route_table" "mariadb_private_route_table" {
   vpc_id = aws_vpc.terraform_vpc.id
 
   route {
-    cidr_block = aws_vpc.terraform_vpc.cidr_block
-    gateway_id = "local"
-  }
-
-  route {
     cidr_block     = "0.0.0.0/0"
     nat_gateway_id = aws_nat_gateway.mariadb_nat_gateway.id
   }
@@ -102,19 +92,15 @@ resource "aws_route_table_association" "mariadb_private_route_association" {
   route_table_id = aws_route_table.mariadb_private_route_table.id
 }
 
-resource "aws_network_interface" "mariadb_to_nat_network_interface" {
-  subnet_id = aws_subnet.mariadb_private_subnet.id
+resource "aws_route_table" "internal_route_table" {
+  vpc_id = aws_vpc.terraform_vpc.id
+
+  tags = {
+    Name = "internal_route_table"
+  } 
 }
 
-resource "aws_network_interface" "maria_to_wordpress_network_interface" {
-  subnet_id = aws_subnet.wordpress_private_subnet.id
-}
-
-resource "aws_network_interface" "wordpress_to_mariadb_network_interface" {
-  subnet_id = aws_subnet.wordpress_private_subnet.id
-}
-
-resource "aws_network_interface" "wordpress_to_public_network_interface" {
-  subnet_id = aws_subnet.wordpress_public_subnet.id
-
+resource "aws_route_table_association" "internal_route_association" {
+  subnet_id      = aws_subnet.wordpress_private_subnet.id
+  route_table_id = aws_route_table.internal_route_table.id
 }

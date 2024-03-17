@@ -3,6 +3,8 @@ resource "aws_instance" "wordpress" {
   instance_type     = "t2.micro"
   availability_zone = var.availability_zone
 
+  depends_on = [ aws_instance.mariadb ]
+
   network_interface {
     network_interface_id = aws_network_interface.wordpress_to_public_network_interface.id
     device_index         = 0

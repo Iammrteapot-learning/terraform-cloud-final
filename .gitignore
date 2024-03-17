@@ -1,0 +1,4 @@
+.terraform
+.aws/credentials
+terraform.exe
+.terraform.lock.hcl

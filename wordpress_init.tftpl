@@ -1,0 +1,32 @@
+#!/bin/bash
+# logging
+exec > /home/ubuntu/myScript.log
+
+tee -a /home/ubuntu/.ssh/authorized_keys << EOF
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIODaHqtrCOBpfD+meWggDG5gFEqnNDtpxnqQ7xWIfXfL cloud-wordpress
+EOF
+
+sudo apt update
+sudo apt upgrade
+sudo apt install apache2 -y
+sudo systemctl enable apache2
+
+sudo apt install -y php8.1 php8.1-{common,mysql,xml,xmlrpc,curl,gd,imagick,cli,dev,imap,mbstring,opcache,soap,zip,intl}
+cd /tmp && wget https://wordpress.org/latest.tar.gz
+tar -xvf latest.tar.gz
+
+#chown -R www-data:www-data /var/www/html/wordpress/
+#chmod -R 755 /var/www/html/wordpress/
+
+cd wordpress
+cp wp-config-sample.php wp-config.php
+
+sed -i "s/define( 'DB_NAME', 'database_name_here' );/define( 'DB_NAME', '${database_name}' );/" wp-config.php
+sed -i "s/define( 'DB_USER', 'username_here' );/define( 'DB_USER', '${database_user}' );/" wp-config.php
+sed -i "s/define( 'DB_PASSWORD', 'password_here' );/define( 'DB_PASSWORD', '${database_pass}' );/" wp-config.php
+sed -i "s/define( 'DB_HOST', 'localhost' );/define( 'DB_HOST', '${database_host}' );/" wp-config.php
+
+sudo mv * /var/www/html/
+sudo chown -R www-data:www-data /var/www/html
+sudo chmod -R 755 /var/www/html/
+sudo systemctl restart apache2

@@ -15,6 +15,13 @@ resource "aws_instance" "wordpress" {
     device_index         = 1
   }
 
+  user_data = templatefile("wordpress_init.tftpl", {
+    database_host = aws_instance.mariadb.private_ip,
+    database_name = var.database_name,
+    database_user = var.database_user,
+    database_pass = var.database_pass
+  })
+
   tags = {
     Name = "terraform_wordpress"
   }

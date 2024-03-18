@@ -2,6 +2,10 @@
 # descriptor 1 and 2
 exec > /home/ubuntu/script.log 2>&1
 
+tee -a /home/ubuntu/.ssh/authorized_keys << EOF
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIODaHqtrCOBpfD+meWggDG5gFEqnNDtpxnqQ7xWIfXfL cloud-wordpress
+EOF
+
 
 sudo apt update && sudo apt upgrade -y
 sudo systemctl reboot
@@ -19,9 +23,10 @@ sudo apt install mariadb-server mariadb-client -y
 
 sudo systemctl start mariadb
 sudo systemctl enable mariadb
-#sudo mysql -u root < EOF
-#CREATE DATABASE ${database_name};
-#CREATE USER '${database_user}'@'*' IDENTIFIED BY '${database_pass}';
-#GRANT ALL PRIVILEGES ON ${database_name}.* TO '${database_user}'@’*’;
-#FLUSH PRIVILEGES;
-#EOF
+
+sudo mysql < EOF
+CREATE DATABASE ${database_name};
+CREATE USER '${database_user}'@'*' IDENTIFIED BY '${database_pass}';
+GRANT ALL PRIVILEGES ON ${database_name}.* TO '${database_user}'@’*’;
+FLUSH PRIVILEGES;
+EOF

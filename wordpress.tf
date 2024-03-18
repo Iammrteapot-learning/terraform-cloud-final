@@ -15,7 +15,6 @@ resource "aws_instance" "wordpress" {
     device_index         = 1
   }
 
-  key_name = aws_key_pair.public.key_name
   tags = {
     Name = "terraform_wordpress"
   }

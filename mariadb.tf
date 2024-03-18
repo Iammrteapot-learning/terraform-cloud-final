@@ -13,6 +13,12 @@ resource "aws_instance" "mariadb" {
     device_index         = 1
   }
 
+  user_data = templatefile("mariadb_init.tftpl", {
+    database_name = var.database_name,
+    database_user = var.database_user,
+    database_pass = var.database_pass
+
+  })
   tags = {
     Name = "terraform_mariadb"
   }

@@ -97,7 +97,7 @@ resource "aws_route_table" "internal_route_table" {
 
   tags = {
     Name = "internal_route_table"
-  } 
+  }
 }
 
 resource "aws_route_table_association" "internal_route_association" {

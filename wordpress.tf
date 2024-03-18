@@ -16,7 +16,7 @@ resource "aws_instance" "wordpress" {
   }
 
   user_data = templatefile("wordpress_init.tftpl", {
-    database_host = aws_instance.mariadb.private_ip,
+    database_host = aws_network_interface.maria_to_wordpress_network_interface.private_ip,
     database_name = var.database_name,
     database_user = var.database_user,
     database_pass = var.database_pass

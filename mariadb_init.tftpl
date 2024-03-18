@@ -19,6 +19,10 @@ sudo apt install mariadb-server
 sudo systemctl start mariadb
 sudo systemctl enable mariadb
 
+echo "[mysqld]" | sudo tee -a /etc/mysql/my.cnf
+echo "bind-address = 0.0.0.0" | sudo tee -a /etc/mysql/my.cnf
+sudo systemctl restart mariadb
+
 echo "CREATE DATABASE ${database_name}; CREATE USER '${database_user}'@'*' IDENTIFIED BY '${database_pass}'; GRANT ALL PRIVILEGES ON ${database_name}.* TO '${database_user}'@'*'; FLUSH PRIVILEGES;" > init.sql
 
 sudo mysql < init.sql

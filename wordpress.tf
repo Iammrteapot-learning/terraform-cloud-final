@@ -23,6 +23,10 @@ resource "aws_instance" "wordpress" {
     admin_user = var.admin_user
     admin_pass = var.admin_pass
     wordpress_url = aws_eip.wordpress.public_ip
+    s3_access_key = aws_iam_access_key.wordpress_access_key.id  
+    s3_secret_key = aws_iam_access_key.wordpress_access_key.secret
+    s3_bucket = aws_s3_bucket.wordpress_s3.bucket
+    region = var.region
   })
 
   tags = {

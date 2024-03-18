@@ -3,6 +3,7 @@ resource "aws_instance" "mariadb" {
   instance_type     = "t2.micro"
   availability_zone = var.availability_zone
 
+  key_name = aws_key_pair.public.key_name
   network_interface {
     network_interface_id = aws_network_interface.mariadb_to_nat_network_interface.id
     device_index         = 0

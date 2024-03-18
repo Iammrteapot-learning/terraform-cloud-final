@@ -14,19 +14,14 @@ sudo ./mariadb_repo_setup \
    --mariadb-server-version="mariadb-10.6"
 sudo apt update -y
 
-sudo apt install mariadb-server
+sudo apt install mariadb-server -y
 
-sudo systemctl start mariadb
-sudo systemctl enable mariadb
 
 echo "[mysqld]" | sudo tee -a /etc/mysql/my.cnf
 echo "bind-address = 0.0.0.0" | sudo tee -a /etc/mysql/my.cnf
 sudo systemctl restart mariadb
+sudo systemctl enable mariadb
 
-echo "CREATE DATABASE ${database_name}; CREATE USER '${database_user}'@'*' IDENTIFIED BY '${database_pass}'; GRANT ALL PRIVILEGES ON ${database_name}.* TO '${database_user}'@'*'; FLUSH PRIVILEGES;" > init.sql
+echo "CREATE DATABASE ${database_name}; CREATE USER ${database_user}@'%' IDENTIFIED BY '${database_pass}'; GRANT ALL ON ${database_name}.* TO ${database_user}@'%'; FLUSH PRIVILEGES;" > init.sql
 
 sudo mysql < init.sql
-
-#echo "CREATE DATABASE dbname3; CREATE USER 'dbuser3'@'*' IDENTIFIED BY 'dbpass'; GRANT ALL PRIVILEGES ON dbname3.* TO 'dbuser3'@'*'; FLUSH PRIVILEGES;" > init.sql
-
-#sudo mysql -u root < init.sql

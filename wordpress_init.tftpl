@@ -26,7 +26,14 @@ sed -i "s/define( 'DB_USER', 'username_here' );/define( 'DB_USER', '${database_u
 sed -i "s/define( 'DB_PASSWORD', 'password_here' );/define( 'DB_PASSWORD', '${database_pass}' );/" wp-config.php
 sed -i "s/define( 'DB_HOST', 'localhost' );/define( 'DB_HOST', '${database_host}' );/" wp-config.php
 
-echo "\ndefine('AS#CF_SETTiNGS',serialize( array('provider' => 'aws','access-key-id' => '${s3_access_key}','secret-access-key' => '${s3_secret_key}','bucket' => '${s3_bucket}','region' => '${region}','copy-to-s3' => true,'serve-from-s3' => true,)));" | sudo tee -a wp-config.php
+echo "define('AS3CF_SETTINGS', serialize( array(
+    'provider' => 'aws',
+    'access-key-id' => '${s3_access_key}',
+    'secret-access-key' => '${s3_secret_key}',
+    'bucket' => '${s3_bucket}','region' => '${region}',
+    'copy-to-s3' => true,
+    'serve-from-s3' => true,
+)));" | sudo tee -a wp-config.php
 
 sudo mv * /var/www/html/
 sudo chown -R www-data:www-data /var/www/html
